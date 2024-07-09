@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Display Search</title>
+</head>
+<body>
+    <form id="search-form">
+        <label for="size">Size:</label>
+        <input type="text" id="size" name="size">
+        <label for="resolution">Resolution:</label>
+        <select id="resolution" name="resolution">
+            <option value="QVGA">QVGA</option>
+            <!-- 添加其他選項 -->
+        </select>
+        <!-- 添加其他輸入框 -->
+        <button type="submit">Search</button>
+    </form>
+
+    <ul id="results"></ul>
+
+    <script>
+        document.getElementById('search-form').onsubmit = function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const data = {};
+            formData.forEach((value, key) => { data[key] = value; });
+            
+            fetch('/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(results => {
+                const resultsList = document.getElementById('results');
+                resultsList.innerHTML = '';
+                results.forEach(model => {
+                    const li = document.createElement('li');
+                    li.textContent = model;
+                    resultsList.appendChild(li);
+                });
+            });
+        };
+    </script>
+</body>
+</html>

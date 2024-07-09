@@ -2,18 +2,18 @@ import streamlit as st
 import pandas as pd
 import os
 
-# 使用相對路徑讀取Excel文件
+# 使用相对路径读取Excel文件
 file_path = os.path.join(os.path.dirname(__file__), 'ADP RMP collection.xlsx')
 sheets = pd.read_excel(file_path, sheet_name=['GD_All', 'PD_All'])
 
-# 選擇數據表
+# 选择数据表
 df_gd_all = sheets['GD_All']
 df_pd_all = sheets['PD_All']
 
-# 創建標題
+# 创建标题
 st.title("Display Model Search")
 
-# 創建下拉選單和輸入框
+# 创建下拉选单和输入框
 size_options = [''] + sorted(df_gd_all['Size'].dropna().unique().tolist())
 resolution_options = [''] + sorted(df_gd_all['Resolution_N'].dropna().unique().tolist())
 interface_options = [''] + sorted(df_gd_all['Interface'].dropna().unique().tolist())
@@ -32,7 +32,7 @@ interface = st.selectbox('Interface', interface_options, key='interface')
 temp_l = st.selectbox('LC Temperature Low (leave blank if not needed)', temp_l_options, key='temp_l')
 temp_h = st.selectbox('LC Temperature High (leave blank if not needed)', temp_h_options, key='temp_h')
 
-# 根據用戶輸入進行數據篩選
+# 根据用户输入进行数据筛选
 query = df_gd_all
 if size:
     query = query[query['Size'] == size]
@@ -51,6 +51,6 @@ if temp_l != '':
 if temp_h != '':
     query = query[query['Temp_H'] >= int(temp_h)]
 
-# 顯示篩選結果
-st.write("符合條件的型號如下：")
+# 显示筛选结果
+st.write("符合条件的型号如下：")
 st.dataframe(query[['Model Name', 'Resolution_N', 'Size', 'Brightness', 'ViewAngle_H', 'ViewAngle_V', 'Interface', 'Panel Type', 'PPI', 'Temp_L', 'Temp_H', 'LED Life', 'Color Bit', 'LED Driver', 'Color', 'Note', 'Status']])

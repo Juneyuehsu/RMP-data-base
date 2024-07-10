@@ -52,5 +52,5 @@ if temp_h != '':
     query = query[query['Temp_H'] >= int(temp_h)]
 
 # 显示筛选结果
-st.write("符合条件的型号如下：")
+st.write("The models matching：")
 st.dataframe(query[['Model Name', 'Resolution_N', 'Size', 'Brightness', 'ViewAngle_H', 'ViewAngle_V', 'Interface', 'Panel Type', 'PPI', 'Temp_L', 'Temp_H', 'LED Life', 'Color Bit', 'LED Driver', 'Color', 'Note', 'Status']])

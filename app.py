@@ -11,7 +11,7 @@ df_gd_all = sheets['GD_All']
 df_pd_all = sheets['PD_All']
 
 # 创建标题
-st.title("Display Model Search")
+st.title("Display Model Search (Beta_GD)")
 
 # 创建下拉选单和输入框
 size_options = [''] + sorted(df_gd_all['Size'].dropna().unique().tolist())

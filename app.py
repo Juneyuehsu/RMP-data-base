@@ -10,30 +10,44 @@ sheets = pd.read_excel(file_path, sheet_name=['GD_All', 'PD_All'])
 df_gd_all = sheets['GD_All']
 df_pd_all = sheets['PD_All']
 
+# 将相关列转换为数值类型
+columns_to_convert = ['Size', 'Brightness', 'ViewAngle_H', 'ViewAngle_V', 'Temp_L', 'Temp_H']
+for col in columns_to_convert:
+    df_gd_all[col] = pd.to_numeric(df_gd_all[col], errors='coerce')
+    df_pd_all[col] = pd.to_numeric(df_pd_all[col], errors='coerce')
+
 # 创建标题
-st.title("Display Model Search (Beta_GD)")
+st.title("Display Model Search_Beta")
+
+# 选择数据来源
+data_source = st.selectbox('Data Source', ['GD', 'PD'])
+
+# 根据选择的数据来源确定要使用的数据表
+if data_source == 'GD':
+    df_all = df_gd_all
+else:
+    df_all = df_pd_all
 
 # 创建下拉选单和输入框
-size_options = [''] + sorted(df_gd_all['Size'].dropna().unique().tolist())
-resolution_options = [''] + sorted(df_gd_all['Resolution_N'].dropna().unique().tolist())
-interface_options = [''] + sorted(df_gd_all['Interface'].dropna().unique().tolist())
-temp_l_options = [''] + sorted(df_gd_all['Temp_L'].dropna().unique().tolist())
-temp_h_options = [''] + sorted(df_gd_all['Temp_H'].dropna().unique().tolist())
-brightness_options = [''] + sorted(df_gd_all['Brightness'].dropna().unique().tolist())
-view_angle_h_options = [''] + sorted(df_gd_all['ViewAngle_H'].dropna().unique().tolist())
-view_angle_v_options = [''] + sorted(df_gd_all['ViewAngle_V'].dropna().unique().tolist())
+size_options = [''] + sorted(df_all['Size'].dropna().unique().tolist())
+resolution_options = [''] + sorted(df_all['Resolution_N'].dropna().unique().tolist())
+interface_options = [''] + sorted(df_all['Interface'].dropna().unique().tolist())
+temp_l_options = [''] + sorted(df_all['Temp_L'].dropna().unique().tolist())
+temp_h_options = [''] + sorted(df_all['Temp_H'].dropna().unique().tolist())
+brightness_options = [''] + sorted(df_all['Brightness'].dropna().unique().tolist())
+view_angle_h_options = [''] + sorted(df_all['ViewAngle_H'].dropna().unique().tolist())
+view_angle_v_options = [''] + sorted(df_all['ViewAngle_V'].dropna().unique().tolist())
 
-size = st.selectbox('Size', size_options, key='size')
-resolution = st.selectbox('Resolution', resolution_options, key='resolution')
-brightness = st.selectbox('Brightness (leave blank if not needed)', brightness_options, key='brightness')
-view_angle_h = st.selectbox('View Angle Horizontal (leave blank if not needed)', view_angle_h_options, key='view_angle_h')
-view_angle_v = st.selectbox('View Angle Vertical (leave blank if not needed)', view_angle_v_options, key='view_angle_v')
-interface = st.selectbox('Interface', interface_options, key='interface')
-temp_l = st.selectbox('LC Temperature Low (leave blank if not needed)', temp_l_options, key='temp_l')
-temp_h = st.selectbox('LC Temperature High (leave blank if not needed)', temp_h_options, key='temp_h')
+size = st.selectbox('Size', size_options)
+resolution = st.selectbox('Resolution', resolution_options)
+brightness = st.selectbox('Brightness (leave blank if not needed)', brightness_options)
+view_angle_h = st.selectbox('View Angle Horizontal (leave blank if not needed)', view_angle_h_options)
+view_angle_v = st.selectbox('View Angle Vertical (leave blank if not needed)', view_angle_v_options)
+interface = st.selectbox('Interface', interface_options)
+temp_l = st.selectbox('LC Temperature Low (leave blank if not needed)', temp_l_options)
+temp_h = st.selectbox('LC Temperature High (leave blank if not needed)', temp_h_options)
 
-# 根据用户输入进行数据筛选
-query = df_gd_all
+query = df_all
 if size:
     query = query[query['Size'] == size]
 if resolution:
@@ -51,6 +65,9 @@ if temp_l != '':
 if temp_h != '':
     query = query[query['Temp_H'] >= int(temp_h)]
 
-# 显示筛选结果
-st.write("The models matching：")
-st.dataframe(query[['Model Name', 'Resolution_N', 'Size', 'Brightness', 'ViewAngle_H', 'ViewAngle_V', 'Interface', 'Panel Type', 'PPI', 'Temp_L', 'Temp_H', 'LED Life', 'Color Bit', 'LED Driver', 'Color', 'Note', 'Status']])
+st.write("The Models Matching：")
+st.dataframe(query)
+
+# 添加版权信息
+st.write("")
+st.write("Beta_rev-2, ACME internal only, by Alonso")

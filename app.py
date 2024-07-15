@@ -77,7 +77,7 @@ if temp_l != '':
 if temp_h != '':
     query = query[query['Temp_H'] >= int(temp_h)]
 
-st.write("符合条件的型号如下：")
+st.write("The model matching：")
 st.dataframe(query)
 
 # 添加版权信息
